@@ -464,7 +464,7 @@ def get_augmented_pascal_image_annotation_filename_pairs(pascal_root, pascal_ber
     can be downloaded from here:
     http://www.eecs.berkeley.edu/Research/Projects/CS/vision/grouping/semantic_contours/benchmark.tgz
     Consider running convert_pascal_berkeley_augmented_mat_annotations_to_png() after extraction.
-    
+
     The PASCAL VOC dataset can be downloaded from here:
     http://host.robots.ox.ac.uk/pascal/VOC/voc2012/VOCtrainval_11-May-2012.tar
     Consider specifying root full names for both of them as arguments for this function
@@ -507,18 +507,19 @@ def get_augmented_pascal_image_annotation_filename_pairs(pascal_root, pascal_ber
         Array with filename pairs with fullnames.
     """
     pascal_txts = get_pascal_segmentation_images_lists_txts(pascal_root=pascal_root)
-    berkeley_txts = get_pascal_berkeley_augmented_segmentation_images_lists_txts(pascal_berkeley_root=pascal_berkeley_root)
+    #berkeley_txts = get_pascal_berkeley_augmented_segmentation_images_lists_txts(pascal_berkeley_root=pascal_berkeley_root)
 
     pascal_name_lists = readlines_with_strip_array_version(pascal_txts)
-    berkeley_name_lists = readlines_with_strip_array_version(berkeley_txts)
+    #berkeley_name_lists = readlines_with_strip_array_version(berkeley_txts)
 
     pascal_train_name_set, pascal_val_name_set, _ = map(lambda x: set(x), pascal_name_lists)
-    berkeley_train_name_set, berkeley_val_name_set = map(lambda x: set(x), berkeley_name_lists)
+    #berkeley_train_name_set, berkeley_val_name_set = map(lambda x: set(x), berkeley_name_lists)
 
-    all_berkeley = berkeley_train_name_set | berkeley_val_name_set
+    #all_berkeley = berkeley_train_name_set | berkeley_val_name_set
     all_pascal = pascal_train_name_set | pascal_val_name_set
 
-    everything = all_berkeley | all_pascal
+    #everything = all_berkeley | all_pascal
+    everything = all_pascal
 
     # Extract the validation subset based on selected mode
     if mode == 1:
@@ -540,21 +541,25 @@ def get_augmented_pascal_image_annotation_filename_pairs(pascal_root, pascal_ber
     train = everything - validation
 
     # Get the part that can be extracted from berkeley
-    train_from_berkeley = train & all_berkeley
+    #train_from_berkeley = train & all_berkeley
+    train_from_berkeley = train
 
     # The rest of the data will be loaded from pascal
-    train_from_pascal = train - train_from_berkeley
+    #train_from_pascal = train - train_from_berkeley
+    train_from_pascal = train
 
-    train_from_berkeley_image_annotation_pairs = \
-    get_pascal_berkeley_augmented_selected_image_annotation_filenames_pairs(pascal_berkeley_root,
-                                                                            list(train_from_berkeley))
+    #train_from_berkeley_image_annotation_pairs = \
+    #get_pascal_berkeley_augmented_selected_image_annotation_filenames_pairs(pascal_berkeley_root,
+    #                                                                        list(train_from_berkeley))
 
     train_from_pascal_image_annotation_pairs = \
     get_pascal_selected_image_annotation_filenames_pairs(pascal_root,
                                                          list(train_from_pascal))
 
+    #overall_train_image_annotation_filename_pairs = \
+    #train_from_berkeley_image_annotation_pairs + train_from_pascal_image_annotation_pairs
     overall_train_image_annotation_filename_pairs = \
-    train_from_berkeley_image_annotation_pairs + train_from_pascal_image_annotation_pairs
+    train_from_pascal_image_annotation_pairs
 
     overall_val_image_annotation_filename_pairs = \
     get_pascal_selected_image_annotation_filenames_pairs(pascal_root,
